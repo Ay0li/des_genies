@@ -22,7 +22,5 @@ public class Test {
             System.out.println("Connection failed: invalid user connection");
             System.exit(1);
         }
-
-        
     }
 }

@@ -8,6 +8,7 @@ public class Pizza implements Ingredient {
     private Sauce sauce;
     private List<Contenu> contenu = new ArrayList<>();
 
+
     public void setPate(Pate pate) {
         this.pate = pate;
     }
@@ -29,7 +30,6 @@ public class Pizza implements Ingredient {
         return "pizza [pate: " + pate.toString() + ", sauce: " + sauce.toString() + ", contenu: " + contenu.toString() + "]";
     }
 
-    
 
     @Override
     public double getPrix() {
