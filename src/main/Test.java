@@ -7,12 +7,15 @@ import java.util.ArrayList;
 
 public class Test {
     public static void main(String[] args) {
-        // Test de la connexion admin
+        // Admin connection test
         DBProcess process = new DBProcess();
 
         if (!process.getMDP("admin").equals("admin")) {
             System.out.println("Connection failed: invalid user default password");
             System.exit(1);
+        }
+        else {
+            System.out.println("Connection : You have login succesfully");
         }
 
         process.changerMDP("admin", "admin");
@@ -21,28 +24,33 @@ public class Test {
             System.out.println("Connection failed: admin password has not changed");
             System.exit(1);
         }
+        else {
+            System.out.println("Connection : You have login succesfully");
+        }
 
         if (!process.connexion("admin", "admin")) {
             System.out.println("Connection failed: invalid user connection");
             System.exit(1);
         }
-
-        // Test changement d'état de la commande
-        Commande commande = new Commande();
-        System.out.println("Etat initial de la commande: " + commande.getEtat());
-        commande.etatSuivant();
-        System.out.println("Etat après première transition: " + commande.getEtat());
-        commande.etatSuivant();
-        System.out.println("Etat après deuxième transition: " + commande.getEtat());
-
-        if (!commande.getEtat().equals("livree")) {
-            System.out.println("commande test failed, status not in livree state");
-            System.exit(1);
-        } else {
-            System.out.println("Succès: l'état de la commande est bien 'livree' après deux transitions.");
+        else {
+            System.out.println("Connection : You have login succesfully");
         }
 
-        // Test ajout de pizza à la commande
+        Commande commande = new Commande();
+        System.out.println("Initial order state: " + commande.getEtat());
+        commande.etatSuivant();
+        System.out.println("State after first transition: " + commande.getEtat());
+        commande.etatSuivant();
+        System.out.println("State after second transition: " + commande.getEtat());
+
+        if (!commande.getEtat().equals("livree")) {
+            System.out.println("Order test failed, status not in delivered state");
+            System.exit(1);
+        } else {
+            System.out.println("Success: order state is 'delivered' after two transitions.");
+        }
+
+
         PizzaHawaienneBuilder pizzaBuilder = new PizzaHawaienneBuilder();
         pizzaBuilder.createNewPizzaProduct();
         pizzaBuilder.buildPate();
@@ -52,50 +60,50 @@ public class Test {
         commande.ajouteProduit(pizza);
 
         if (commande.getPizzas().contains(pizza)) {
-            System.out.println("Succès: la pizza hawaienne a bien été ajoutée à la commande.");
+            System.out.println("Success: Hawaiian pizza was added to the order.");
         } else {
-            System.out.println("Erreur: la pizza hawaienne n'a pas été ajoutée à la commande.");
+            System.out.println("Error: Hawaiian pizza was not added to the order.");
         }
 
-        // Test utilisation du serveur pour créer une pizza norvégienne
+        
         Serveur serveur = new Serveur();
         serveur.setPizzaBuilder(new PizzaNorvegienneBuilder());
         serveur.constructPizza();
 
         Pizza pizzaFromServer = serveur.getPizza();
         if (pizzaFromServer != null && pizzaFromServer instanceof Pizza) {
-            System.out.println("Succès: le serveur a bien créé une pizza norvégienne.");
+            System.out.println("Success: the server created a Norwegian pizza.");
         } else {
-            System.out.println("Erreur: le serveur n'a pas créé une pizza norvégienne.");
+            System.out.println("Error: the server did not create a Norwegian pizza.");
         }
 
-        System.out.println("Détails de la pizza créée par le serveur: " + pizzaFromServer);
+        System.out.println("Details of the pizza created by the server: " + pizzaFromServer);
 
-        // Vérification des détails de la pizza norvégienne créée par le serveur
-        if (!pizzaFromServer.toString().equals("pizza [pate: cuite, sauce: Huile d'olive, contenu: [saumon, mozzarella]]")) {
-            System.out.println("commande test failed, pizza is not ready");
+        
+        if (!pizzaFromServer.toString().equals("pizza [pate: cooked, sauce: olive oil, contenu: [salmon, mozzarella]]")) {
+            System.out.println("Order test failed, pizza is not ready");
             System.exit(1);
         } else {
-            System.out.println("Succès: la pizza norvégienne a été correctement préparée par le serveur.");
+            System.out.println("Success: the Norwegian pizza was correctly prepared by the server.");
         }
 
-        // Ajout de la pizza à la commande et vérification
+        
         commande.ajouteProduit(pizzaFromServer);
         if (commande.getPizzas().size() == 0) {
-            System.out.println("commande test failed, command was not picking the pizza");
+            System.out.println("Order test failed, the order did not pick the pizza");
             System.exit(1);
         } else {
-            System.out.println("Succès: la pizza norvégienne a bien été ajoutée à la commande.");
+            System.out.println("Success: the Norwegian pizza was added to the order.");
         }
 
-        // Test ajout de pizza après validation de la commande
-        commande.etatSuivant(); // passe à "validée"
+        
+        commande.etatSuivant(); 
         commande.ajouteProduit(pizzaFromServer);
         if (commande.getPizzas().size() == 2) {
-            System.out.println("commande test failed, command was picking the pizza, although it was in Validee status");
+            System.out.println("Order test failed, the order picked the pizza, although it was in Validated status");
             System.exit(1);
         } else {
-            System.out.println("Succès: aucune pizza n'a été ajoutée après validation de la commande.");
+            System.out.println("Success: no pizza was added after the order was validated.");
         }
     }
 }
